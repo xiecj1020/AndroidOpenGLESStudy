@@ -33,6 +33,7 @@ public class MyGLRender implements GLSurfaceView.Renderer {
     private final float[] mProjectionMatrix = new float[16];
     private final float[] mViewMatrix = new float[16];
     private Triangle mTriangle;
+    private Square mSquare;
     private float[] mRotationMatrix = new float[16];
 
     public volatile float mAngle;
@@ -50,6 +51,8 @@ public class MyGLRender implements GLSurfaceView.Renderer {
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
         // initialize a triangle
         mTriangle = new Triangle();
+        // initialize a Square
+        mSquare = new Square();
         // Set the background frame color
         GLES20.glClearColor(0.0f, 1.0f, 1.0f, 1.0f);
 
@@ -88,7 +91,9 @@ public class MyGLRender implements GLSurfaceView.Renderer {
         // for the matrix multiplication product to be correct.
         Matrix.multiplyMM(scratch, 0, mMVPMatrix, 0, mRotationMatrix, 0);
         // Draw shape
-        mTriangle.draw(scratch);
+        //mTriangle.draw(scratch);
+        //Draw Square
+        mSquare.draw(scratch);
 
     }
     public static int loadShader(int type, String shaderCode){
