@@ -125,6 +125,12 @@ public class Triangle {
         GLES20.glEnableVertexAttribArray(mPositionHandle);
 
         // Prepare the triangle coordinate data
+        //这里对参数stride不是很理解，在下面网址找到这样的回答
+        //https://www.gamedev.net/forums/topic/592520-glvertexattribpointer-understanding-the-39stride39-parameter/
+        //The stride defines the bytes between the start of one vertex and the start of another.
+        // Zero is a special case number for when you are lazy and don't feel like calculating
+        // the byte offset yourself. You are correct that you will get the same result
+        // when using 0 and 3*sizeof(float) in your case.
         GLES20.glVertexAttribPointer(mPositionHandle, COORDS_PER_VERTEX,
                 GLES20.GL_FLOAT, false,
                 vertexStride, vertexBuffer);
