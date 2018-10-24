@@ -35,6 +35,7 @@ public class MyGLRender implements GLSurfaceView.Renderer {
     private Triangle mTriangle;
     private Square mSquare;
     private Circle mCirCle;
+    private Cube mCube;
     private float[] mRotationMatrix = new float[16];
 
     public volatile float mAngle;
@@ -56,6 +57,28 @@ public class MyGLRender implements GLSurfaceView.Renderer {
         mSquare = new Square();
         // initialize a Circle
         mCirCle = new Circle();
+        // initialize a Cube
+        mCube = new Cube();
+        //开启深度测试
+        /**
+        *（1）什么是深度？
+        * 深度其实就是该象素点在3d世界中距离摄象机的距离（绘制坐标），深度缓存中存储着每个象素点（绘制在屏幕上的）的深度值！
+        * 深度值（Z值）越大，则离摄像机越远。深度值是存贮在深度缓存里面的，我们用深度缓存的位数来衡量深度缓存的精度。
+        * 深度缓存位数越高，则精确度越高，目前的显卡一般都可支持16位的Z Buffer，一些高级的显卡已经可以支持32位的Z Buffer，但一般用24位Z Buffer就已经足够了。
+        *（2）为什么需要深度？
+        * 在不使用深度测试的时候，如果我们先绘制一个距离较近的物体，再绘制距离较远的物体，则距离远的物体因为后绘制，会把距离近的物体覆盖掉，这样的效果并不是我们所希望的。
+        * 而有了深度缓冲以后，绘制物体的顺序就不那么重要了，都能按照远近（Z值）正常显示，这很关键。
+        * 实际上，只要存在深度缓冲区，无论是否启用深度测试，OpenGL在像素被绘制时都会尝试将深度数据写入到缓冲区内，除非调用了glDepthMask(GL_FALSE)来禁止写入。
+        * 这些深度数据除了用于常规的测试外，还可以有一些有趣的用途，比如绘制阴影等等。
+        * (3)启用深度测试
+        *  使用 glEnable(GL_DEPTH_TEST);
+        *  在默认情况是将需要绘制的新像素的z值与深度缓冲区中对应位置的z值进行比较，如果比深度缓存中的值小，那么用新像素的颜色值更新帧缓存中对应像素的颜色值。
+        *  但是可以使用glDepthFunc(func)来对这种默认测试方式进行修改。
+        *  其中参数func的值可以为GL_NEVER（没有处理）、GL_ALWAYS（处理所有）、GL_LESS（小于）、GL_LEQUAL（小于等于）、GL_EQUAL（等于）、GL_GEQUAL（大于等于）、GL_GREATER（大于）或GL_NOTEQUAL（不等于），其中默认值是GL_LESS。
+        *  一般来，使用glDepthFunc(GL_LEQUAL);来表达一般物体之间的遮挡关系。
+        *  启用了深度测试，那么这就不适用于同时绘制不透明物体。
+         */
+        GLES20.glEnable(GLES20.GL_DEPTH_TEST);
         // Set the background frame color
         GLES20.glClearColor(0.0f, 1.0f, 1.0f, 1.0f);
 
@@ -69,13 +92,14 @@ public class MyGLRender implements GLSurfaceView.Renderer {
 
         // this projection matrix is applied to object coordinates
         // in the onDrawFrame() method
-        Matrix.frustumM(mProjectionMatrix, 0, -ratio, ratio, -1, 1, 3, 7);
+        Matrix.frustumM(mProjectionMatrix, 0, -ratio, ratio, -1, 1, 3, 15);
     }
 
     @Override
     public void onDrawFrame(GL10 gl) {
         // Redraw background color
-        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
+        //GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
+        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT| GLES20.GL_DEPTH_BUFFER_BIT);
         float[] scratch = new float[16];
         // Create a rotation transformation for the triangle
         long time = SystemClock.uptimeMillis() % 4000L;
@@ -84,8 +108,9 @@ public class MyGLRender implements GLSurfaceView.Renderer {
 
         // Set the camera position (View matrix)
         //eyeZ的值google传递的是-3,我把它修改为6
-        Matrix.setLookAtM(mViewMatrix, 0, 0, 0, 6, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
-
+        //Matrix.setLookAtM(mViewMatrix, 0, 0, 0, 6, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
+        //绘制立方体的时候需要修改眼睛位置，否则我们只看得到一个面，会以为只绘制的一个正方形出来
+        Matrix.setLookAtM(mViewMatrix, 0, 5, 5, 6, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
         // Calculate the projection and view transformation
         Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
 
@@ -98,7 +123,9 @@ public class MyGLRender implements GLSurfaceView.Renderer {
         //Draw Square
         //mSquare.draw(scratch);
         //Draw Circle
-        mCirCle.draw(scratch);
+        //mCirCle.draw(scratch);
+        //Draw Cube
+        mCube.draw(scratch);
 
     }
     public static int loadShader(int type, String shaderCode){
