@@ -4,6 +4,9 @@ import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 import android.os.SystemClock;
+import android.util.Log;
+
+import java.util.Arrays;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -93,6 +96,7 @@ public class MyGLRender implements GLSurfaceView.Renderer {
         // this projection matrix is applied to object coordinates
         // in the onDrawFrame() method
         Matrix.frustumM(mProjectionMatrix, 0, -ratio, ratio, -1, 1, 3, 15);
+        Log.e("mytag","mProjectionMatrix="+ Arrays.toString(mProjectionMatrix));
     }
 
     @Override
@@ -100,6 +104,7 @@ public class MyGLRender implements GLSurfaceView.Renderer {
         // Redraw background color
         //GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT| GLES20.GL_DEPTH_BUFFER_BIT);
+        //scratch = ProjectMatrix X ViewMatrix X ModeMatrix
         float[] scratch = new float[16];
         // Create a rotation transformation for the triangle
         long time = SystemClock.uptimeMillis() % 4000L;
@@ -108,24 +113,42 @@ public class MyGLRender implements GLSurfaceView.Renderer {
 
         // Set the camera position (View matrix)
         //eyeZ的值google传递的是-3,我把它修改为6
-        //Matrix.setLookAtM(mViewMatrix, 0, 0, 0, 6, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
+        Matrix.setLookAtM(mViewMatrix, 0, 0, 0, 6, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
+        /**
+         * 打印视图矩矩阵，结果如下
+         * 1.0000    	-0.0000    	0.0000    	0.0000
+         * 0.0000    	1.0000    	0.0000    	0.0000
+         * -0.0000    	-0.0000    	1.0000    	-6.0000
+         * 0.0000    	0.0000    	0.0000    	1.0000
+         * 这个矩阵是设置的眼睛位置的逆矩阵，眼睛位置的矩阵如下:
+         * 1.0000    	0.0000    	0.0000    	0.0000
+         * 0.0000    	1.0000    	0.0000    	0.0000
+         * 0.0000    	0.0000    	1.0000    	6.0000   (眼睛位置)
+         * 0.0000    	0.0000    	0.0000    	1.0000
+         *
+         * 所以模型坐标的z值应该取值范围:[eye-near,eye-far]
+         *
+         */
+        Log.e("mytag","mViewMatrix="+Arrays.toString(mViewMatrix));
         //绘制立方体的时候需要修改眼睛位置，否则我们只看得到一个面，会以为只绘制的一个正方形出来
-        Matrix.setLookAtM(mViewMatrix, 0, 5, 5, 6, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
+        //Matrix.setLookAtM(mViewMatrix, 0, 5, 5, 6, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
         // Calculate the projection and view transformation
+        //this is ProjectMatrix X ViewMatrix
         Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
 
         // Combine the rotation matrix with the projection and camera view
         // Note that the mMVPMatrix factor *must be first* in order
         // for the matrix multiplication product to be correct.
+        //this is ProjectMatrix X ViewMatrix X ModeMatrix
         Matrix.multiplyMM(scratch, 0, mMVPMatrix, 0, mRotationMatrix, 0);
         // Draw shape
-        //mTriangle.draw(scratch);
+        mTriangle.draw(scratch);
         //Draw Square
         //mSquare.draw(scratch);
         //Draw Circle
         //mCirCle.draw(scratch);
         //Draw Cube
-        mCube.draw(scratch);
+        //mCube.draw(scratch);
 
     }
     public static int loadShader(int type, String shaderCode){
