@@ -47,8 +47,14 @@ public class Circle {
 
     //设置颜色，依次为红绿蓝和透明通道
     float color[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+    //圆坐标的Z值
+    private float mHeight = 0.0f;
 
     public Circle(){
+        this(0.0f);
+    }
+    public Circle(float height){
+        mHeight = height;
         shapePos= createPositions();
         ByteBuffer bb = ByteBuffer.allocateDirect(
                 shapePos.length * 4);
@@ -75,12 +81,12 @@ public class Circle {
         ArrayList<Float> data=new ArrayList<>();
         data.add(0.0f);             //设置圆心坐标
         data.add(0.0f);
-        data.add(0.0f);
+        data.add(mHeight);
         float angDegSpan=360f/n;
         for(float i=0;i<360+angDegSpan;i+=angDegSpan){
             data.add((float) (radius*Math.sin(i*Math.PI/180f)));
             data.add((float)(radius*Math.cos(i*Math.PI/180f)));
-            data.add(0.0f);
+            data.add(mHeight);
         }
         float[] f=new float[data.size()];
         for (int i=0;i<f.length;i++){
