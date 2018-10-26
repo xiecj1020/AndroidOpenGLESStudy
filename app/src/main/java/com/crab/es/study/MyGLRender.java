@@ -39,6 +39,7 @@ public class MyGLRender implements GLSurfaceView.Renderer {
     private Square mSquare;
     private Circle mCirCle;
     private Cube mCube;
+    private Cone mCone;
     private float[] mRotationMatrix = new float[16];
 
     public volatile float mAngle;
@@ -62,6 +63,8 @@ public class MyGLRender implements GLSurfaceView.Renderer {
         mCirCle = new Circle();
         // initialize a Cube
         mCube = new Cube();
+        //initialize a Cone
+        mCone = new Cone();
         //开启深度测试
         /**
         *（1）什么是深度？
@@ -113,7 +116,7 @@ public class MyGLRender implements GLSurfaceView.Renderer {
 
         // Set the camera position (View matrix)
         //eyeZ的值google传递的是-3,我把它修改为6
-        Matrix.setLookAtM(mViewMatrix, 0, 0, 0, 6, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
+        //Matrix.setLookAtM(mViewMatrix, 0, 0, 0, 6, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
         /**
          * 打印视图矩矩阵，结果如下
          * 1.0000    	-0.0000    	0.0000    	0.0000
@@ -129,9 +132,9 @@ public class MyGLRender implements GLSurfaceView.Renderer {
          * 所以模型坐标的z值应该取值范围:[eye-near,eye-far]
          *
          */
-        Log.e("mytag","mViewMatrix="+Arrays.toString(mViewMatrix));
+        //Log.e("mytag","mViewMatrix="+Arrays.toString(mViewMatrix));
         //绘制立方体的时候需要修改眼睛位置，否则我们只看得到一个面，会以为只绘制的一个正方形出来
-        //Matrix.setLookAtM(mViewMatrix, 0, 5, 5, 6, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
+        Matrix.setLookAtM(mViewMatrix, 0, 5, 5, 6, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
         // Calculate the projection and view transformation
         //this is ProjectMatrix X ViewMatrix
         Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
@@ -142,13 +145,15 @@ public class MyGLRender implements GLSurfaceView.Renderer {
         //this is ProjectMatrix X ViewMatrix X ModeMatrix
         Matrix.multiplyMM(scratch, 0, mMVPMatrix, 0, mRotationMatrix, 0);
         // Draw shape
-        mTriangle.draw(scratch);
+        //mTriangle.draw(scratch);
         //Draw Square
         //mSquare.draw(scratch);
         //Draw Circle
         //mCirCle.draw(scratch);
         //Draw Cube
         //mCube.draw(scratch);
+        //Draw Cone
+        mCone.draw(scratch);
 
     }
     public static int loadShader(int type, String shaderCode){
