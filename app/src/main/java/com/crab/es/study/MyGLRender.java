@@ -1,5 +1,8 @@
 package com.crab.es.study;
 
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
@@ -42,6 +45,7 @@ public class MyGLRender implements GLSurfaceView.Renderer {
     private Cone mCone;
     private Cylinder mCylinder;
     private Ball mBall;
+    private FirstTexture mFirstTexture;
     private float[] mRotationMatrix = new float[16];
 
     public volatile float mAngle;
@@ -71,6 +75,10 @@ public class MyGLRender implements GLSurfaceView.Renderer {
         mCylinder = new Cylinder();
         //initialize a Ball
         mBall = new Ball();
+        //initialize a Texture
+        Resources resources = EsApplication.getGlobalResource();
+        Bitmap bitmap = BitmapFactory.decodeResource(resources,R.drawable.char_patrick);
+        mFirstTexture= new FirstTexture(bitmap);
         //开启深度测试
         /**
         *（1）什么是深度？
@@ -91,6 +99,8 @@ public class MyGLRender implements GLSurfaceView.Renderer {
         *  启用了深度测试，那么这就不适用于同时绘制不透明物体。
          */
         GLES20.glEnable(GLES20.GL_DEPTH_TEST);
+        GLES20.glEnable(GLES20.GL_TEXTURE_2D);
+        GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
         // Set the background frame color
         GLES20.glClearColor(0.0f, 1.0f, 1.0f, 1.0f);
 
@@ -122,7 +132,7 @@ public class MyGLRender implements GLSurfaceView.Renderer {
 
         // Set the camera position (View matrix)
         //eyeZ的值google传递的是-3,我把它修改为6
-        //Matrix.setLookAtM(mViewMatrix, 0, 0, 0, 6, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
+        Matrix.setLookAtM(mViewMatrix, 0, 0, 0, 6, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
         /**
          * 打印视图矩矩阵，结果如下
          * 1.0000    	-0.0000    	0.0000    	0.0000
@@ -140,7 +150,7 @@ public class MyGLRender implements GLSurfaceView.Renderer {
          */
         //Log.e("mytag","mViewMatrix="+Arrays.toString(mViewMatrix));
         //绘制立方体的时候需要修改眼睛位置，否则我们只看得到一个面，会以为只绘制的一个正方形出来
-        Matrix.setLookAtM(mViewMatrix, 0, 5, 5, 6, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
+        //Matrix.setLookAtM(mViewMatrix, 0, 5, 5, 6, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
         // Calculate the projection and view transformation
         //this is ProjectMatrix X ViewMatrix
         Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
@@ -163,7 +173,9 @@ public class MyGLRender implements GLSurfaceView.Renderer {
         //Draw Cylinder
         //mCylinder.draw(scratch);
         //Draw Ball
-        mBall.draw(scratch);
+        //mBall.draw(scratch);
+        //Draw texture
+        mFirstTexture.draw(scratch);
 
     }
     public static int loadShader(int type, String shaderCode){
