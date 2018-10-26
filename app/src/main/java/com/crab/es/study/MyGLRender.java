@@ -41,6 +41,7 @@ public class MyGLRender implements GLSurfaceView.Renderer {
     private Cube mCube;
     private Cone mCone;
     private Cylinder mCylinder;
+    private Ball mBall;
     private float[] mRotationMatrix = new float[16];
 
     public volatile float mAngle;
@@ -68,6 +69,8 @@ public class MyGLRender implements GLSurfaceView.Renderer {
         mCone = new Cone();
         //initialize a Cylinder
         mCylinder = new Cylinder();
+        //initialize a Ball
+        mBall = new Ball();
         //开启深度测试
         /**
         *（1）什么是深度？
@@ -158,7 +161,9 @@ public class MyGLRender implements GLSurfaceView.Renderer {
         //Draw Cone
         //mCone.draw(scratch);
         //Draw Cylinder
-        mCylinder.draw(scratch);
+        //mCylinder.draw(scratch);
+        //Draw Ball
+        mBall.draw(scratch);
 
     }
     public static int loadShader(int type, String shaderCode){
