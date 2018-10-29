@@ -12,6 +12,9 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.crab.es.study.obj.ObjLoadActivity;
+import com.crab.es.study.obj.ObjLoadActivity2;
+
 public class MainActivity extends AppCompatActivity {
     private GLSurfaceView mGLView;
     @Override
@@ -27,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-                Intent intent = new Intent(MainActivity.this,CameraActivity.class);
+                Intent intent = new Intent(MainActivity.this,ObjLoadActivity2.class);
                 startActivity(intent);
             }
         });

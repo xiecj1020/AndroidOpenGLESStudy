@@ -36,6 +36,14 @@
             android:screenOrientation="portrait"
             >
         </activity>
+        <activity android:name=".obj.ObjLoadActivity"
+            android:screenOrientation="portrait"
+            >
+        </activity>
+        <activity android:name=".obj.ObjLoadActivity2"
+            android:screenOrientation="portrait"
+            >
+        </activity>
     </application>
 
 </manifest>
