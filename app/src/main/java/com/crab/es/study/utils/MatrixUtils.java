@@ -2,9 +2,6 @@ package com.crab.es.study.utils;
 
 import android.opengl.Matrix;
 
-/**
- * Description:
- */
 public enum MatrixUtils {
     ;
     public static final int TYPE_FITXY=0;
