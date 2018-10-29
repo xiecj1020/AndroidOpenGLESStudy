@@ -11,6 +11,9 @@
     <supports-gl-texture android:name="GL_OES_compressed_paletted_texture" />
     <!-- camera permission-->
     <uses-permission android:name="android.permission.CAMERA" />
+    <!-- storage permission-->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -53,6 +56,10 @@
             >
         </activity>
         <activity android:name=".VrContextActivity"
+            android:screenOrientation="portrait"
+            >
+        </activity>
+        <activity android:name=".FrameBufferObjectActivity"
             android:screenOrientation="portrait"
             >
         </activity>
