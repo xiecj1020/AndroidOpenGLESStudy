@@ -9,6 +9,8 @@
       is only installed on compatible devices. -->
     <supports-gl-texture android:name="GL_OES_compressed_ETC1_RGB8_texture" />
     <supports-gl-texture android:name="GL_OES_compressed_paletted_texture" />
+    <!-- camera permission-->
+    <uses-permission android:name="android.permission.CAMERA" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -27,6 +29,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".ZipActvity"
+            android:screenOrientation="portrait"
+            >
+        </activity>
+        <activity android:name=".CameraActivity"
             android:screenOrientation="portrait"
             >
         </activity>
