@@ -2,6 +2,8 @@ package com.crab.es.study;
 
 import android.opengl.GLES20;
 
+import com.crab.es.study.utils.ShaderUtils;
+
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;

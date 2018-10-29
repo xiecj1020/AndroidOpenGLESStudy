@@ -2,6 +2,8 @@ package com.crab.es.study;
 
 import android.opengl.GLES20;
 
+import com.crab.es.study.utils.ShaderUtils;
+
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
@@ -50,7 +52,7 @@ public class Cylinder {
         vertexBuffer.put(d);
         vertexBuffer.position(0);
 
-        mProgram=ShaderUtils.createProgram(EsApplication.getGlobalResource(),"vshader/Cone.sh","fshader/Cone.sh");
+        mProgram= ShaderUtils.createProgram(EsApplication.getGlobalResource(),"vshader/Cone.sh","fshader/Cone.sh");
     }
     public void draw(float[] mvpMatrix) { // pass in the calculated transformation matrix
         GLES20.glUseProgram(mProgram);

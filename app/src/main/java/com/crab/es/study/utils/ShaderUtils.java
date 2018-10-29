@@ -1,4 +1,4 @@
-package com.crab.es.study;
+package com.crab.es.study.utils;
 
 import android.content.res.Resources;
 import android.opengl.GLES20;

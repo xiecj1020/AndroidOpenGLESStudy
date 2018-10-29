@@ -6,6 +6,8 @@ import android.opengl.GLES20;
 import android.opengl.GLUtils;
 import android.util.Log;
 
+import com.crab.es.study.utils.ShaderUtils;
+
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
@@ -49,7 +51,7 @@ public class FirstTexture {
         bCoord.put(sCoord);
         bCoord.position(0);
 
-        mProgram=ShaderUtils.createProgram(EsApplication.getGlobalResource(),"vshader/Texture.sh","fshader/Texture.sh");
+        mProgram= ShaderUtils.createProgram(EsApplication.getGlobalResource(),"vshader/Texture.sh","fshader/Texture.sh");
         Log.e("mytag","mProgram="+mProgram);
 
     }
