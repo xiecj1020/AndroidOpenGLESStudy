@@ -15,7 +15,13 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         >
+        <!--
         <com.crab.es.study.MyGLSurfaceView
+            android:id="@+id/gl_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+            -->
+        <com.crab.es.study.OrthoMProjectionView
             android:id="@+id/gl_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
