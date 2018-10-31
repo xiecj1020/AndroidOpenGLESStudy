@@ -32,10 +32,10 @@ public class FirstTexture {
 //            0.5f,-0.5f,3.0f //右下角
 //    };
     public static float sPos[] = {
-            0.0f, 0.0f, 0.0f,
-            0.0f, 540.0f, 0.0f,
-        540f, 0.0f, 0.0f,
-            540f, 540.0f, 0.0f
+            75.0f, 0.0f, 0.0f,
+            0.0f, 75.0f, 0.0f,
+            150f, 75.0f, 0.0f,
+            75.0f, 150.0f, 0.0f,
     };
 
     private final float[] sCoord={
@@ -59,7 +59,7 @@ public class FirstTexture {
         bCoord.position(0);
 
         mProgram= ShaderUtils.createProgram(EsApplication.getGlobalResource(),"vshader/Texture.sh","fshader/Texture.sh");
-        Log.e("mytag","mProgram="+mProgram);
+        Log.e("mytag","FirstTexture mProgram="+mProgram);
 
     }
     public void draw(float[] mvpMatrix) { // pass in the calculated transformation matrix

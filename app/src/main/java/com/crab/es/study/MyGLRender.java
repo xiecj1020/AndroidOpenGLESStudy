@@ -45,7 +45,6 @@ public class MyGLRender implements GLSurfaceView.Renderer {
     private Cone mCone;
     private Cylinder mCylinder;
     private Ball mBall;
-    private FirstTexture mFirstTexture;
     private float[] mRotationMatrix = new float[16];
 
     public volatile float mAngle;
@@ -75,10 +74,6 @@ public class MyGLRender implements GLSurfaceView.Renderer {
         mCylinder = new Cylinder();
         //initialize a Ball
         mBall = new Ball();
-        //initialize a Texture
-        Resources resources = EsApplication.getGlobalResource();
-        Bitmap bitmap = BitmapFactory.decodeResource(resources,R.drawable.char_patrick);
-        mFirstTexture= new FirstTexture(bitmap);
         //开启深度测试
         /**
         *（1）什么是深度？
@@ -115,7 +110,6 @@ public class MyGLRender implements GLSurfaceView.Renderer {
         // this projection matrix is applied to object coordinates
         // in the onDrawFrame() method
         Matrix.frustumM(mProjectionMatrix, 0, -ratio, ratio, -1, 1, 3, 15);
-        Log.e("mytag","mProjectionMatrix="+ Arrays.toString(mProjectionMatrix));
     }
 
     @Override
@@ -161,7 +155,7 @@ public class MyGLRender implements GLSurfaceView.Renderer {
         //this is ProjectMatrix X ViewMatrix X ModeMatrix
         Matrix.multiplyMM(scratch, 0, mMVPMatrix, 0, mRotationMatrix, 0);
         // Draw shape
-        //mTriangle.draw(scratch);
+        mTriangle.draw(scratch);
         //Draw Square
         //mSquare.draw(scratch);
         //Draw Circle
@@ -175,7 +169,7 @@ public class MyGLRender implements GLSurfaceView.Renderer {
         //Draw Ball
         //mBall.draw(scratch);
         //Draw texture
-        mFirstTexture.draw(scratch);
+        //mFirstTexture.draw(scratch);
 
     }
     public static int loadShader(int type, String shaderCode){

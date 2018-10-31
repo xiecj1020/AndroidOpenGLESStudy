@@ -17,6 +17,7 @@ import com.crab.es.study.obj.ObjLoadActivity2;
 
 public class MainActivity extends AppCompatActivity {
     private GLSurfaceView mGLView;
+    private GLSurfaceView mGLView1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,18 +36,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         mGLView = findViewById(R.id.gl_view);
+        mGLView1 = findViewById(R.id.gl_view1);
         EsApplication.setGlobalRecource(getResources());
     }
     @Override
     protected void onResume() {
         super.onResume();
         mGLView.onResume();
+        mGLView1.onResume();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         mGLView.onPause();
+        mGLView1.onPause();
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

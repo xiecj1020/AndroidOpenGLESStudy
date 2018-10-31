@@ -8,6 +8,7 @@ import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 import android.util.AttributeSet;
+
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
@@ -15,7 +16,7 @@ public class OrthoMProjectionView extends GLSurfaceView implements GLSurfaceView
     private final float[] mMVPMatrix = new float[16];
     private final float[] mProjectionMatrix = new float[16];
     private final float[] mViewMatrix = new float[16];
-    private  float[] mModeMatrix = new float[16];
+    private  float[] mPreModeMatrix = new float[16];
     private FirstTexture mFirstTexture;
     private float[] mRotationMatrix = new float[16];
 
@@ -58,7 +59,7 @@ public class OrthoMProjectionView extends GLSurfaceView implements GLSurfaceView
         GLES20.glViewport(0, 0, width, height);
         float ratio = (float) width / height;
         Matrix.orthoM(mProjectionMatrix, 0, -ratio, ratio, -1, 1, 3, 15);
-        mModeMatrix=computeTheDeviceOrthoMatrix(width,height,ratio);
+        mPreModeMatrix =computeTheDeviceOrthoMatrix(width,height,ratio);
     }
 
     /**
@@ -66,54 +67,26 @@ public class OrthoMProjectionView extends GLSurfaceView implements GLSurfaceView
      * 计算把屏幕坐标映射到模型坐标矩阵
      */
     private float[] computeTheDeviceOrthoMatrix(float width,float height,float ratio){
-        //先计算出屏幕坐标对应的模型坐标是多少,矩阵格式如下(竖着看):
-        //1.0f,0.0f,0.0f,-width/2
-        //0.0f,-1.0f,0.0f,height/2
-        //0.0f,0.0f,1.0f,0.0f
-        //0.0f,0.0f,0.0f,1.0f
-        float[] moveMatrix=new float[16];
-        moveMatrix[0] = 1.0f;
-        moveMatrix[1] = 0.0f;
-        moveMatrix[2] = 0.0f;
-        moveMatrix[3] = 0.0f;
-        moveMatrix[4] = 0.0f;
-        moveMatrix[5] = -1.0f;
-        moveMatrix[6] = 0.0f;
-        moveMatrix[7] = 0.0f;
-        moveMatrix[8] = 0.0f;
-        moveMatrix[9] = 0.0f;
-        moveMatrix[10] = 1.0f;
-        moveMatrix[11] = 0.0f;
-        moveMatrix[12] = (-1.0f*width/2);
-        moveMatrix[13] = (1.0f*height/2);
-        moveMatrix[14] = 0.0f;
-        moveMatrix[15] = 1.0f;
-        //把计算出的坐标缩放到指定的范围,x轴[-ratio,ratio],y轴[-1,1]
-        //矩阵格式如下(竖着看):
-        //(2.0f/width)*ratio,0.0f,0.0f,0.0f
-        //0.0f,(2.0f/height),0.0f,0.0f
-        //0.0f,0.0f,1.0f,0.0f
-        //0.0f,0.0f,0.0f,1.0f
-       float[] scaleMatrix = new float[16];
-        scaleMatrix[0] = (2.0f/width)*ratio;
-        scaleMatrix[1] = 0.0f;
-        scaleMatrix[2] = 0.0f;
-        scaleMatrix[3] = 0.0f;
-        scaleMatrix[4] = 0.0f;
-        scaleMatrix[5] = (2.0f/height);
-        scaleMatrix[6] = 0.0f;
-        scaleMatrix[7] = 0.0f;
-        scaleMatrix[8] = 0.0f;
-        scaleMatrix[9] = 0.0f;
-        scaleMatrix[10] = 1.0f;
-        scaleMatrix[11] = 0.0f;
-        scaleMatrix[12] = 0.0f;
-        scaleMatrix[13] = 0.0f;
-        scaleMatrix[14] = 0.0f;
-        scaleMatrix[15] = 1.0f;
-        float[] resultMatrix = new float[16];
-        Matrix.multiplyMM(resultMatrix,0,scaleMatrix,0,moveMatrix,0);
-        return resultMatrix;
+        float[] translateM = new float[16];
+        Matrix.setIdentityM(translateM,0);
+        Matrix.translateM(translateM,0,-width/2,height/2,0.0f);
+
+        float[] rotateM = new float[16];
+        Matrix.setIdentityM(rotateM,0);
+        Matrix.rotateM(rotateM,0,180,1.0f,0.0f,0.0f);
+
+        float[] scaleM = new float[16];
+        Matrix.setIdentityM(scaleM,0);
+        float sx = (2.0f/width)*ratio;
+        float sy = 2.0f/height;
+        Matrix.scaleM(scaleM,0,sx,sy,1.0f);
+
+        float[] resultMatrix1 =new float[16];
+        Matrix.multiplyMM(resultMatrix1,0,translateM,0,rotateM,0);
+
+        float[] resultMatrix2 =new float[16];
+        Matrix.multiplyMM(resultMatrix2,0,scaleM,0,resultMatrix1,0);
+        return resultMatrix2;
     }
 
     @Override
@@ -123,7 +96,7 @@ public class OrthoMProjectionView extends GLSurfaceView implements GLSurfaceView
         Matrix.setIdentityM(scratch,0);
         Matrix.setLookAtM(mViewMatrix, 0, 0, 0, 6, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
         Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
-        Matrix.multiplyMM(scratch, 0, mMVPMatrix, 0, mModeMatrix, 0);
+        Matrix.multiplyMM(scratch, 0, mMVPMatrix, 0, mPreModeMatrix, 0);
         mFirstTexture.draw(scratch);
     }
     public static int loadShader(int type, String shaderCode){
