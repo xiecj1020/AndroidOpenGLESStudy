@@ -68,6 +68,22 @@
             android:screenOrientation="portrait"
             >
         </activity>
+        <activity android:name="com.crab.es.game.Sameple51Actvity"
+            android:screenOrientation="portrait"
+            >
+        </activity>
+        <activity android:name="com.crab.es.game.Sample81Activity"
+            android:screenOrientation="portrait"
+            >
+        </activity>
+        <activity android:name="com.crab.es.game.Sample87Activity"
+            android:screenOrientation="portrait"
+            >
+        </activity>
+        <activity android:name="com.crab.es.game.Sample94Activity"
+            android:screenOrientation="portrait"
+            >
+        </activity>
     </application>
 
 </manifest>
