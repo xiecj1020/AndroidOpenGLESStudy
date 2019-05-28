@@ -5,9 +5,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
+import android.opengl.GLU;
 import android.opengl.Matrix;
 import android.os.SystemClock;
 import android.util.Log;
+import android.view.MotionEvent;
 
 import java.util.Arrays;
 
@@ -46,6 +48,9 @@ public class MyGLRender implements GLSurfaceView.Renderer {
     private Cylinder mCylinder;
     private Ball mBall;
     private float[] mRotationMatrix = new float[16];
+
+    //视口数组{0,0,mWidth,mHeight}
+    private int[] mViewPoint = new int[4];
 
     public volatile float mAngle;
 
@@ -103,6 +108,7 @@ public class MyGLRender implements GLSurfaceView.Renderer {
 
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
+        mViewPoint = new int[]{0,0,width,height};
         GLES20.glViewport(0, 0, width, height);
 
         float ratio = (float) width / height;
@@ -172,6 +178,9 @@ public class MyGLRender implements GLSurfaceView.Renderer {
         //mFirstTexture.draw(scratch);
 
     }
+
+
+
     public static int loadShader(int type, String shaderCode){
 
         // create a vertex shader type (GLES20.GL_VERTEX_SHADER)
@@ -184,4 +193,29 @@ public class MyGLRender implements GLSurfaceView.Renderer {
 
         return shader;
     }
+
+    public boolean onTouchEvent(MotionEvent event) {
+
+        float[] r1 = new float[4];
+        float[] r2 = new float[4];
+        float windowX = event.getX();
+        float windowY = event.getY();
+        //需要转为视图窗口坐标
+        windowY = mViewPoint[3]  - windowY;
+        float[] modeViewMatrix = new float[16];
+        Matrix.multiplyMM(modeViewMatrix,0,mViewMatrix,0,mRotationMatrix,0);
+        //winZ近平面点传0.0f
+        GLU.gluUnProject(windowX, windowY, 0.0f, modeViewMatrix, 0, mProjectionMatrix,
+                0, mViewPoint, 0, r1, 0);
+        //winZ远平面点传0.0f
+        GLU.gluUnProject(windowX, windowY, 1.0f, modeViewMatrix, 0, mProjectionMatrix,
+                0, mViewPoint, 0, r2, 0);
+        //获得比例
+        float t = -r1[2] / r2[2];
+        float objectX = r1[0] + t * r2[0];
+        float objectY = r1[1] + t * r2[1];
+        Log.e("mytag", "onTouchEvent objectX=" + objectX + ",objectY=" + objectY);
+        return false;
+    }
+
 }

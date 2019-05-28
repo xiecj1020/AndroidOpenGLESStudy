@@ -31,7 +31,7 @@ public class MyGLSurfaceView extends GLSurfaceView{
         // MotionEvent reports input details from the touch screen
         // and other input controls. In this case, you are only
         // interested in events where the touch position changed.
-
+        mRenderer.onTouchEvent(e);
         float x = e.getX();
         float y = e.getY();
 
