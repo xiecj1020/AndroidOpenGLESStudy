@@ -406,7 +406,6 @@ public class LightRender implements GLSurfaceView.Renderer {
         GLES20.glUniformMatrix4fv(mMVMatrixHandle, 1, false, mMVMatrix, 0);
         Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mMVMatrix, 0);
         GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mMVPMatrix, 0);
-        //
         float[] lightPosInEyeSpace = new float[4];
         Matrix.multiplyMV(lightPosInEyeSpace, 0, mViewMatrix, 0, light_position_mode, 0);
         GLES20.glUniform3f(mLightHandle,lightPosInEyeSpace[0],lightPosInEyeSpace[1],lightPosInEyeSpace[2]);
