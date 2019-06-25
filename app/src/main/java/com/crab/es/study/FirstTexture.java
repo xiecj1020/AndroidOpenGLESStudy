@@ -32,10 +32,10 @@ public class FirstTexture {
 //            0.5f,-0.5f,3.0f //右下角
 //    };
     public static float sPos[] = {
-            75.0f, 0.0f, 0.0f,
-            0.0f, 75.0f, 0.0f,
-            150f, 75.0f, 0.0f,
-            75.0f, 150.0f, 0.0f,
+            0.0f, 0.0f, 0.0f,
+            0.0f, 1.0f, 0.0f,
+            1f,  0.0f, 0.0f,
+            1.0f, 1.0f, 0.0f,
     };
 
     private final float[] sCoord={
@@ -71,7 +71,7 @@ public class FirstTexture {
         GLES20.glUniformMatrix4fv(glHMatrix, 1, false, mvpMatrix, 0);
         GLES20.glEnableVertexAttribArray(glHPosition);
         GLES20.glEnableVertexAttribArray(glHCoordinate);
-        GLES20.glUniform1i(glHTexture, 0);
+        GLES20.glUniform1i(glHTexture, 2);
         textureId = createTexture();
         GLES20.glVertexAttribPointer(glHPosition, 3, GLES20.GL_FLOAT, false, 0, bPos);
         GLES20.glVertexAttribPointer(glHCoordinate, 2, GLES20.GL_FLOAT, false, 0, bCoord);
@@ -82,6 +82,7 @@ public class FirstTexture {
     private int createTexture(){
         int[] texture=new int[1];
         if(mBitmap!=null&&!mBitmap.isRecycled()){
+            GLES20.glActiveTexture(GLES20.GL_TEXTURE2);
             //生成纹理
             GLES20.glGenTextures(1,texture,0);
             //bind纹理
