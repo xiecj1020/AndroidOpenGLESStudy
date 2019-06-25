@@ -45,7 +45,7 @@ vec4 specularColor(){
     //观察方向，这里将观察点固定在（0，0，uLightPosition.z）处
     vec3 viewDirection=normalize(vec3(0,0,uLightPosition.z)-fragPos);
     //观察向量与光照向量的半向量
-    vec3 hafVector=normalize(lightDirection+viewDirection);
+    vec3 hafVector=normalize(lightDirection+ );
     //max(0,cos(半向量与法向量的夹角)^粗糙度
     float diff=pow(max(dot(normal,hafVector),0.0),4.0);
     //材质的镜面反射系数*max(0,cos(反射向量与观察向量夹角)^粗糙度*光照颜色

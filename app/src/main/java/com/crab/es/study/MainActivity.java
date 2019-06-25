@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-                Intent intent = new Intent(MainActivity.this,BlendActivity.class);
+                Intent intent = new Intent(MainActivity.this,MyLightActivity.class);
                 startActivity(intent);
                 finish();
             }
