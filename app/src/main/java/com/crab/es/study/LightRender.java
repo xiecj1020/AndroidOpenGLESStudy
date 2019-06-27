@@ -181,14 +181,11 @@ public class LightRender implements GLSurfaceView.Renderer {
             1.0f, 1.0f, 0.0f, 1.0f,
     };
     //光源的位置
-    private float[] light_position = {2.0f, 4.0f, 6.0f};
-    private float[] light_position_mode={2.0f, 4.0f, 6.0f,1.0f};
+    private float[] light_position ={2.0f, 4.0f, 6.0f,1.0f};
     //立方体的缓存变量
     private FloatBuffer mCubeVertices;
     private FloatBuffer mCubeColors;
     private FloatBuffer mCubeNormals;
-    //光源位置的缓存变量
-    private FloatBuffer mLightPosition;
     //camera变换矩阵
     private float[] mViewMatrix = new float[16];
     //透视投影变换矩阵
@@ -219,7 +216,6 @@ public class LightRender implements GLSurfaceView.Renderer {
         mCubeVertices = createBuffer(cubePositions);
         mCubeNormals = createBuffer(normals);
         mCubeColors = createBuffer(colors);
-        mLightPosition = createBuffer(light_position);
     }
 
     /**
@@ -377,17 +373,22 @@ public class LightRender implements GLSurfaceView.Renderer {
      * 绘制光源的位置
      */
     private void drawLightPoint() {
+        //光源位置固定，不旋转
         Matrix.setIdentityM(mModelMatrix, 0);
         GLES20.glUseProgram(mProgramPoint);
         Matrix.multiplyMM(mMVMatrix, 0, mViewMatrix, 0, mModelMatrix, 0);
         Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mMVMatrix, 0);
         GLES20.glUniformMatrix4fv(mMVPMatrixForPointHandle, 1, false, mMVPMatrix, 0);
         GLES20.glEnableVertexAttribArray(mPositionForPointHandle);
-        GLES20.glVertexAttribPointer(mPositionForPointHandle, 3, GLES20.GL_FLOAT, false, 0, mLightPosition);
+        //GLES20.glVertexAttribPointer(mPositionForPointHandle, 3, GLES20.GL_FLOAT, false, 0, mLightPosition);
+        GLES20.glVertexAttrib3f(mPositionForPointHandle, light_position[0], light_position[1], light_position[2]);
+        GLES20.glDisableVertexAttribArray(mPositionForPointHandle);
         //绘制一个点，所以count为1
         GLES20.glDrawArrays(GLES20.GL_POINTS, 0, 1);
-        GLES20.glDisableVertexAttribArray(mPositionForPointHandle);
-
+        //下面一行代码的位置不知道为什么放在这里会有问题，所以就把它放到了前面
+        //但是如果用glVertexAttribPointer设置顶点位置的话代码放在这里就不会有问题
+        //猜想可能是指针跟实际数据的差别吧
+        //GLES20.glDisableVertexAttribArray(mPositionForPointHandle);
     }
 
     /**
@@ -407,7 +408,7 @@ public class LightRender implements GLSurfaceView.Renderer {
         Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mMVMatrix, 0);
         GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mMVPMatrix, 0);
         float[] lightPosInEyeSpace = new float[4];
-        Matrix.multiplyMV(lightPosInEyeSpace, 0, mViewMatrix, 0, light_position_mode, 0);
+        Matrix.multiplyMV(lightPosInEyeSpace, 0, mViewMatrix, 0, light_position, 0);
         GLES20.glUniform3f(mLightHandle,lightPosInEyeSpace[0],lightPosInEyeSpace[1],lightPosInEyeSpace[2]);
         //GLES20.glUniform3fv(mLightHandle, 1, mLightPosition);
         GLES20.glEnableVertexAttribArray(mPositionHandle);
